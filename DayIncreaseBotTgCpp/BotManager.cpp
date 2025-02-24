@@ -5,17 +5,17 @@
 #include <thread>
 #include <atomic>
 
-BotManager::BotManager(std::shared_ptr<TgBot::Bot> bot, std::shared_ptr<WeatherApiManager> weatherApiManager)
+BotManager::BotManager(std::shared_ptr<TgBot::Bot> bot, const std::shared_ptr<WeatherApiManager>& weatherApiManager)
     : bot_(bot),
-      weather_api_manager_(weatherApiManager),
-      location_service_(std::make_shared<LocationService>(bot, weather_api_manager_)),
-      update_scheduler_(std::make_shared<UpdateScheduler>(bot, weather_api_manager_)),
-      message_handler_(std::make_shared<MessageHandler>(weather_api_manager_, location_service_, bot, update_scheduler_)),
-      is_running_(false) {}
+      weatherApiManager_(weatherApiManager),
+      locationService_(std::make_shared<LocationService>(bot, weatherApiManager_)),
+      updateScheduler_(std::make_shared<UpdateScheduler>(bot, weatherApiManager_)),
+      messageHandler_(std::make_shared<MessageHandler>(weatherApiManager_, locationService_, bot, updateScheduler_)),
+      isRunning(false) {}
 
 void BotManager::startBot() {
     std::cout << "Bot is starting..." << '\n';
-    is_running_ = true;
+    isRunning = true;
 
     std::thread botThread([this]() {
         try {

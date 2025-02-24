@@ -11,18 +11,18 @@
 
 class BotManager {
 public:
-    BotManager(std::shared_ptr<TgBot::Bot> bot, std::shared_ptr<WeatherApiManager> weather_api_manager);
+    BotManager(std::shared_ptr<TgBot::Bot> bot, const std::shared_ptr<WeatherApiManager>& weatherApiManager);
 
     void startBot();
     void stopBot();
 
 private:
     const std::shared_ptr<TgBot::Bot> bot_;
-    std::shared_ptr<WeatherApiManager> weather_api_manager_;
-    std::shared_ptr<LocationService> location_service_;
-    std::shared_ptr<UpdateScheduler> update_scheduler_;
-    std::shared_ptr<MessageHandler> message_handler_;
-    std::atomic<bool> is_running_;
+    std::shared_ptr<WeatherApiManager> weatherApiManager_;
+    std::shared_ptr<LocationService> locationService_;
+    std::shared_ptr<UpdateScheduler> updateScheduler_;
+    std::shared_ptr<MessageHandler> messageHandler_;
+    std::atomic<bool> isRunning;
 };
 
 #endif
