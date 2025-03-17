@@ -1,0 +1,5 @@
+﻿{
+  "ApiSettings": {
+    "ApiUrl": "https://api.sunrise-sunset.org/json"
+  }
+}
