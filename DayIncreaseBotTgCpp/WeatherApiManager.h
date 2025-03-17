@@ -1,35 +1,37 @@
-﻿#pragma once
+﻿#ifndef WEATHER_API_MANAGER_H
+#define WEATHER_API_MANAGER_H
 #include <chrono>
 #include <memory>
 #include <string>
 
-#include "SolsticeData.h"
 #include "WeatherApiClient.h"
 
 class WeatherApiManager
 {
 public:
-    WeatherApiManager(std::shared_ptr<WeatherApiClient> const& weatherApiClient);
+    explicit WeatherApiManager(const std::shared_ptr<WeatherApiClient>& weatherApiClient);
 
-    double GetLatitude() const { return latitude; }
-    double GetLongitude() const { return longitude; }
+    [[nodiscard]] double getLatitude() const { return latitude; }
+    [[nodiscard]] double getLongitude() const { return longitude; }
 
-    double SetLatitude(double latitude_)
+    double setLatitude(const double latitude_)
     {
         latitude = latitude_;
         return latitude;
     }
 
-    double SetLongitude(double longitude_)
+    double setLongitude(const double longitude_)
     {
         longitude = longitude_;
         return longitude;
     }
 
-    std::string getTimeAsync(std::chrono::system_clock::time_point date);
+    [[nodiscard]] std::string getTime(std::chrono::system_clock::time_point date) const;
 
 private:
     std::shared_ptr<WeatherApiClient> weatherApiClient_;
-    double latitude;
-    double longitude;
+    double latitude = 0;
+    double longitude = 0;
+    std::string apiUrl;
 };
+#endif
