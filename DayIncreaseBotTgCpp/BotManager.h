@@ -9,20 +9,22 @@
 #include "LocationService.h"
 #include "UpdateScheduler.h"
 
-class BotManager {
+class BotManager
+{
 public:
-    BotManager(std::shared_ptr<TgBot::Bot> bot, const std::shared_ptr<WeatherApiManager>& weatherApiManager);
-
+    BotManager(const std::shared_ptr<TgBot::Bot>& bot, const std::shared_ptr<WeatherApiManager>& weatherApiManager,
+               const std::shared_ptr<WeatherDataParser>& weatherDataParser);
     void startBot();
     void stopBot();
 
 private:
-    const std::shared_ptr<TgBot::Bot> bot_;
+    std::shared_ptr<TgBot::Bot> bot_;
     std::shared_ptr<WeatherApiManager> weatherApiManager_;
+    std::shared_ptr<WeatherDataParser> weatherDataParser_;
     std::shared_ptr<LocationService> locationService_;
     std::shared_ptr<UpdateScheduler> updateScheduler_;
     std::shared_ptr<MessageHandler> messageHandler_;
-    std::atomic<bool> isRunning;
+    bool isRunning = false;
 };
 
 #endif
