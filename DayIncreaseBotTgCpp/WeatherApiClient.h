@@ -1,13 +1,14 @@
-﻿#ifndef WEATHER_API_CLIENT_h
-#define WEATHER_API_CLIENT_h
-#include <chrono>
+﻿#ifndef WEATHER_API_CLIENT_H
+#define WEATHER_API_CLIENT_H
+#include <string>
 
 class WeatherApiClient
 {
 public:
-    WeatherApiClient(const std::string& apiUrl);
-    std::string getWeatherData(double latitude, double longitude, const std::string& date);
+    explicit WeatherApiClient(const std::string& apiUrl);
+    [[nodiscard]] std::string getWeatherData(double latitude, double longitude, const std::string& date) const;
+
 private:
-    std::string apiUrl;
+    std::string apiUrl_;
 };
 #endif

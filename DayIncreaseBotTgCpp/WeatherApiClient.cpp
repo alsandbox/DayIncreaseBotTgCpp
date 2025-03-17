@@ -9,7 +9,7 @@ WeatherApiClient::WeatherApiClient(const std::string& apiUrl)
     if (apiUrl.empty()) {
         throw std::invalid_argument("API URL not configured");
     }
-    this->apiUrl = apiUrl;
+    apiUrl_ = apiUrl;
 }
 std::string WeatherApiClient::getWeatherData(double latitude, double longitude, const std::string& date)
 {
