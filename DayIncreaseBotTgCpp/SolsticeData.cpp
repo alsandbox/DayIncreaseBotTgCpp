@@ -16,47 +16,37 @@ std::map<int, std::pair<std::chrono::system_clock::time_point, std::chrono::syst
     {2030, {std::chrono::system_clock::from_time_t(0) + std::chrono::hours(7) + std::chrono::minutes(31), std::chrono::system_clock::from_time_t(0) + std::chrono::hours(20) + std::chrono::minutes(9)}}
 };
 
-std::optional<std::pair<std::chrono::system_clock::time_point, std::chrono::system_clock::time_point>> SolsticeData::getSolsticeByYear(int year)
+std::optional<std::pair<std::chrono::system_clock::time_point, std::chrono::system_clock::time_point>>
+SolsticeData::getSolsticeByYear(const int year)
 {
-    const auto it = solsticeData.find(year);
-    
-    if (it != solsticeData.end())
+    if (const auto it = solsticeData.find(year); it != solsticeData.end())
     {
         return it->second;
     }
 
-   return std::nullopt;
+    return std::nullopt;
 }
 
 int SolsticeData::getYearFromDate(const std::chrono::system_clock::time_point& date)
 {
-   std::time_t time = std::chrono::system_clock::to_time_t(date);
-   std::tm tmInfo = {};
-#ifdef _WIN32
-    errno_t err = gmtime_s(&tmInfo, &time); 
-    if (err != 0) {
-        std::cerr << "Error converting time: " << err << '\n';
-        
-        return -1;  
-    }
-#else
-    gmtime_r(&time, &tm_info); 
-#endif
-   return tmInfo.tm_year + 1900;
-}
-
-std::string SolsticeData::formatDate(const std::chrono::system_clock::time_point& date) {
     std::time_t time = std::chrono::system_clock::to_time_t(date);
     std::tm tmInfo = {};
-        
-#ifdef _WIN32
-    gmtime_s(&tmInfo, &time);
-#else
-    gmtime_r(&time, &tmInfo);
-#endif
+
+    gmtime(&time); 
+    tmInfo = *gmtime(&time); 
+
+    return tmInfo.tm_year + 1900;
+}
+
+std::string SolsticeData::formatDate(const std::chrono::system_clock::time_point& date)
+{
+    std::time_t time = std::chrono::system_clock::to_time_t(date);
+    std::tm tmInfo = {};
+
+    gmtime(&time);
+    tmInfo = *gmtime(&time);
 
     std::ostringstream oss;
     oss << std::put_time(&tmInfo, "%d-%m-%Y");
     return oss.str();
 }
-
