@@ -6,14 +6,14 @@ LocationService::LocationService(const std::shared_ptr<TgBot::Bot> bot, const st
 
 void LocationService::requestLocation(long chatId) const
 {
-    const TgBot::ReplyKeyboardMarkup::Ptr keyboard(new TgBot::ReplyKeyboardMarkup);
-    
     TgBot::KeyboardButton::Ptr const locationButton(new TgBot::KeyboardButton);
     locationButton->text = "Send Location";
     locationButton->requestLocation = true; 
     
     std::vector<TgBot::KeyboardButton::Ptr> row;
     row.push_back(locationButton);
+        auto keyboard = std::make_shared<TgBot::ReplyKeyboardMarkup>();
+
 
     keyboard->keyboard.push_back(row);
 
