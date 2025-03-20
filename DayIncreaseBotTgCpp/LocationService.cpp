@@ -4,16 +4,17 @@ LocationService::LocationService(const std::shared_ptr<TgBot::Bot> bot, const st
     : bot_(bot),
       weatherApiManager_(weatherApiManager){}
 
-void LocationService::requestLocation(long chatId) const
-{
-    TgBot::KeyboardButton::Ptr const locationButton(new TgBot::KeyboardButton);
-    locationButton->text = "Send Location";
-    locationButton->requestLocation = true; 
-    
-    std::vector<TgBot::KeyboardButton::Ptr> row;
-    row.push_back(locationButton);
+void LocationService::requestLocation(int64_t chatId) const {
+    try
+    {
         auto keyboard = std::make_shared<TgBot::ReplyKeyboardMarkup>();
 
+        auto locationButton = std::make_shared<TgBot::KeyboardButton>();
+        locationButton->text = "Send Location";
+        locationButton->requestLocation = true;
+
+        std::vector<TgBot::KeyboardButton::Ptr> row;
+        row.push_back(locationButton);
 
     keyboard->keyboard.push_back(row);
 
@@ -39,7 +40,9 @@ void LocationService::handleLocationReceived(long chatId, std::atomic<bool>& can
             std::cerr << "Error sending message: " << e.what() << '\n';
         }
 
-        requestLocation(chatId);
+        if (message->chat->type == TgBot::Chat::Type::Private) {
+            requestLocation(chatId);
+        }
     }
 
     isLocationReceived = true;
