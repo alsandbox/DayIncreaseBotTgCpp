@@ -43,8 +43,9 @@ void LocationService::handleLocationReceived(long chatId, std::atomic<bool>& can
     }
 
     isLocationReceived = true;
-    
-    weatherApiManager_->SetLatitude(location->latitude);
+
+    weatherApiManager_->setLatitude(location->latitude);
+    weatherApiManager_->setLongitude(location->longitude);
     
     try {
         (void)bot_->getApi().sendMessage(chatId, "Location received. You can now start receiving information.", false, 0);
