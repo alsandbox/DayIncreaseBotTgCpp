@@ -10,9 +10,10 @@
 class LocationService
 {
 public:
-    LocationService(const std::shared_ptr<TgBot::Bot> bot, std::shared_ptr<WeatherApiManager> const & weatherApiManager);
     void requestLocation(long chatId) const;
     void handleLocationReceived(long chatId, std::atomic<bool>& cancellation_token, const TgBot::Message::Ptr& message);
+    LocationService(const std::shared_ptr<TgBot::Bot>& bot,
+                    const std::shared_ptr<WeatherApiManager>& weatherApiManager);
     std::function<void()> onLocationReceived;
     
 private:

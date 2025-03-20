@@ -1,8 +1,11 @@
 ﻿#include "LocationService.h"
 
-LocationService::LocationService(const std::shared_ptr<TgBot::Bot> bot, const std::shared_ptr<WeatherApiManager> & weatherApiManager)
+LocationService::LocationService(const std::shared_ptr<TgBot::Bot>& bot,
+                                 const std::shared_ptr<WeatherApiManager>& weatherApiManager)
     : bot_(bot),
-      weatherApiManager_(weatherApiManager){}
+      weatherApiManager_(weatherApiManager)
+{
+}
 
 void LocationService::requestLocation(int64_t chatId) const {
     try
