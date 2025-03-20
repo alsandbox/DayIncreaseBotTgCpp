@@ -41,6 +41,14 @@ void BotManager::startBot() {
     }
 }
 
-void BotManager::stopBot() {
-    is_running_ = false;
+void BotManager::handlePollingError(const std::exception& exception)
+{
+    if (const auto* tgException = &exception)
+    {
+        std::cerr << "Telegram API Error:\n" << tgException->what() << '\n';
+    }
+    else
+    {
+        std::cerr << "Error: " << exception.what() << '\n';
+    }
 }

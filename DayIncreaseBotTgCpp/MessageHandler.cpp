@@ -254,14 +254,4 @@ void MessageHandler::handleLocation(const TgBot::Message::Ptr& message, int64_t 
     }
 }
 
-void MessageHandler::handlePollingError(const std::exception& exception)
-{
-    if (const auto* tgException = &exception)
-    {
-        std::cerr << "Telegram API Error:\n" << tgException->what() << '\n';
-    }
-    else
-    {
-        std::cerr << "Error: " << exception.what() << '\n';
-    }
-}
+
