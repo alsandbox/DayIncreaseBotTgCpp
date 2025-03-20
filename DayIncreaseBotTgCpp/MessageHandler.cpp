@@ -167,7 +167,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
                 isSentOnce = true;
             }
             else if (message->chat->type == TgBot::Chat::Type::Private) {
-
+                locationService_->requestLocation(chatId);
             }
         }
     }
@@ -225,7 +225,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
             }
         }
     }
-    else if (command == "/cancelinterval")
+    else if (command == "/cancelintervals")
     {
         updateScheduler_->cancelUvUpdates();
         (void)bot_->getApi().sendMessage(chatId, "Intervals cancelled.", nullptr);
