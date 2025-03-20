@@ -110,7 +110,6 @@ void MessageHandler::handleUpdate(int64_t chatId, const TgBot::Message::Ptr &mes
             else if (message->chat->type != TgBot::Chat::Type::Private || (message->location && message->chat->type == TgBot::Chat::Type::Private)) {
                 handleLocation(message, chatId);
             }
-
         }
     }
     catch (const TgBot::TgException& e)
@@ -167,7 +166,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
                 isSentOnce = true;
             }
             else if (message->chat->type == TgBot::Chat::Type::Private) {
-
+                locationService_->requestLocation(chatId);
             }
         }
     }
@@ -225,7 +224,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
             }
         }
     }
-    else if (command == "/cancelinterval")
+    else if (command == "/cancelintervals")
     {
         updateScheduler_->cancelUvUpdates();
         (void)bot_->getApi().sendMessage(chatId, "Intervals cancelled.", nullptr);
@@ -253,5 +252,3 @@ void MessageHandler::handleLocation(const TgBot::Message::Ptr& message, int64_t 
         }
     }
 }
-
-
