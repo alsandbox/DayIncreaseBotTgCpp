@@ -19,14 +19,16 @@ void LocationService::requestLocation(int64_t chatId) const {
         std::vector<TgBot::KeyboardButton::Ptr> row;
         row.push_back(locationButton);
 
-    keyboard->keyboard.push_back(row);
+        keyboard->keyboard.push_back(row);
 
-    keyboard->resizeKeyboard = true;
-    keyboard->oneTimeKeyboard = true;
+        keyboard->resizeKeyboard = true;
+        keyboard->oneTimeKeyboard = true;
 
-    try {
-    (void)bot_->getApi().sendMessage(chatId, "To receive the info, please share your location:", false, 0, keyboard);
-    } catch (const std::exception& e) {
+        (void)bot_->getApi().sendMessage(chatId, "To receive the info, please share your location:", nullptr, nullptr,
+                                         keyboard);
+    }
+    catch (const std::exception& e)
+    {
         std::cerr << "Error sending message: " << e.what() << '\n';
     }
 }
@@ -37,9 +39,12 @@ void LocationService::handleLocationReceived(long chatId, std::atomic<bool>& can
     
     if (location == nullptr || (location->latitude <= 0 && location->longitude <= 0))
     {
-        try {
-            (void)bot_->getApi().sendMessage(chatId, "Invalid location received. Please try again.", false, 0);
-        } catch (const std::exception& e) {
+        try
+        {
+            (void)bot_->getApi().sendMessage(chatId, "Invalid location received. Please try again.",nullptr);
+        }
+        catch (const std::exception& e)
+        {
             std::cerr << "Error sending message: " << e.what() << '\n';
         }
 
@@ -53,19 +58,20 @@ void LocationService::handleLocationReceived(long chatId, std::atomic<bool>& can
     weatherApiManager_->setLatitude(location->latitude);
     weatherApiManager_->setLongitude(location->longitude);
     
-    try {
-        (void)bot_->getApi().sendMessage(chatId, "Location received. You can now start receiving information.", false, 0);
-    } catch (const std::exception& e) {
-        std::cerr << "Error sending message: " << e.what() << '\n';
+    try
+    {
+        const TgBot::ReplyKeyboardRemove::Ptr removeKeyboard(new TgBot::ReplyKeyboardRemove);
+            (void)bot_->getApi().sendMessage(chatId,
+                                             "Location received. You can now start receiving information.",
+                                             nullptr,
+                                             nullptr,
+                                             removeKeyboard
+            );
     }
-
-    TgBot::ReplyKeyboardRemove::Ptr removeKeyboard(new TgBot::ReplyKeyboardRemove);
-    (void)bot_->getApi().sendMessage(chatId, 
-        "Location received. You can now start receiving information.", 
-        false,
-        0,
-        removeKeyboard
-    );
+    catch (const std::exception& e)
+    {
+         std::cerr << "Error sending message: " << e.what() << '\n';
+    }
 
     if (onLocationReceived) { 
         const auto callback = std::move(onLocationReceived);
