@@ -3,7 +3,6 @@
 
 #include <tgbot/tgbot.h>
 #include <memory>
-#include <atomic>
 #include "WeatherApiManager.h"
 #include "MessageHandler.h"
 #include "LocationService.h"
@@ -15,7 +14,7 @@ public:
     BotManager(const std::shared_ptr<TgBot::Bot>& bot, const std::shared_ptr<WeatherApiManager>& weatherApiManager,
                const std::shared_ptr<WeatherDataParser>& weatherDataParser);
     void startBot();
-    void stopBot();
+    static void handlePollingError(const std::exception& exception);
 
 private:
     std::shared_ptr<TgBot::Bot> bot_;
