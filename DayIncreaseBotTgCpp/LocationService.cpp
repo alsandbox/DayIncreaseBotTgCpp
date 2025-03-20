@@ -33,10 +33,10 @@ void LocationService::requestLocation(int64_t chatId) const {
     }
 }
 
-void LocationService::handleLocationReceived(long chatId, std::atomic<bool>& cancellation_token, const TgBot::Message::Ptr& message)
+void LocationService::handleLocationReceived(int64_t chatId, const TgBot::Message::Ptr& message)
 {
-    const std::shared_ptr<TgBot::Location> location = message->location;
-    
+    std::shared_ptr<TgBot::Location> location = message->location;
+
     if (location == nullptr || (location->latitude <= 0 && location->longitude <= 0))
     {
         try
@@ -73,9 +73,10 @@ void LocationService::handleLocationReceived(long chatId, std::atomic<bool>& can
          std::cerr << "Error sending message: " << e.what() << '\n';
     }
 
-    if (onLocationReceived) { 
+    if (onLocationReceived)
+    {
         const auto callback = std::move(onLocationReceived);
-        onLocationReceived = nullptr; 
+        onLocationReceived = nullptr;
         callback();
     }
 }
