@@ -15,7 +15,6 @@ UpdateScheduler::UpdateScheduler(const std::shared_ptr<TgBot::Bot>& bot,
 
 void UpdateScheduler::scheduleUvUpdates(const std::function<void()>& handleDaylightInfo)
 {
-    std::cout << "scheduleUvUpdates" << std::endl;
     stopTimer = false;
     timerThread = std::thread([self = shared_from_this(), handleDaylightInfo]
     {
@@ -29,8 +28,7 @@ void UpdateScheduler::scheduleUvUpdates(const std::function<void()>& handleDayli
             {
                 std::cerr << "Error in timer callback: " << ex.what() << '\n';
             }
-            //std::this_thread::sleep_for(std::chrono::hours(24));
-            std::this_thread::sleep_for(std::chrono::minutes(1));
+            std::this_thread::sleep_for(std::chrono::hours(24));
         }
     });
 }
@@ -117,7 +115,6 @@ void UpdateScheduler::handleDaysTillSolstice(int64_t chatId)
 
 void UpdateScheduler::cancelUvUpdates()
 {
-std::cout << "cancelUvUpdates" << std::endl;
     stopTimer = true;
     if (timerThread.joinable())
     {
