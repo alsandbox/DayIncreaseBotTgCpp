@@ -26,6 +26,7 @@ public:
     void selectCommand(const std::string& command, int64_t chatId, const TgBot::Message::Ptr& message);
     void handleLocation(const TgBot::Message::Ptr& message, int64_t chatId);
     static void handlePollingError(const std::exception& exception);
+    void askLocationDependingChatType(const TgBot::Message::Ptr& message, int64_t chatId);
 
     StateInfo* GetStateInfo(int64_t chatId) {
         auto it = stateInfoDictionary.find(chatId);

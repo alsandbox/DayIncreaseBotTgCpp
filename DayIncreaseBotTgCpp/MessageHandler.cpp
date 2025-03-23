@@ -134,6 +134,16 @@ void MessageHandler::scheduleDaylightUpdateWithLambda(int64_t chatId) const {
     updateScheduler_->scheduleUvUpdates(daylightUpdateLambda);
 }
 
+void MessageHandler::askLocationDependingChatType(const TgBot::Message::Ptr& message, int64_t chatId) {
+    if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false) {
+        (void)bot_->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
+        isSentOnce = true;
+    }
+    else if (message->chat->type == TgBot::Chat::Type::Private) {
+        locationService_->requestLocation(chatId);
+    }
+}
+
 void MessageHandler::selectCommand(const std::string& command, int64_t chatId, const TgBot::Message::Ptr& message)
 {
     auto it = stateInfoDictionary.find(chatId);
@@ -161,13 +171,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
                     }
             };
 
-            if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false) {
-                (void)bot_->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
-                isSentOnce = true;
-            }
-            else if (message->chat->type == TgBot::Chat::Type::Private) {
-                locationService_->requestLocation(chatId);
-            }
+            askLocationDependingChatType(message, chatId);
         }
     }
     else if (command == "/changelocation")
@@ -215,13 +219,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
                     }
             };
 
-            if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false) {
-                (void)bot_->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
-                isSentOnce = true;
-            }
-            else if (message->chat->type == TgBot::Chat::Type::Private) {
-                locationService_->requestLocation(chatId);
-            }
+            askLocationDependingChatType(message, chatId);
         }
     }
     else if (command == "/cancelintervals")
