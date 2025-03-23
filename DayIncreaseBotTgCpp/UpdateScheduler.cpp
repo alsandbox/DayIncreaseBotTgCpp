@@ -55,7 +55,7 @@ void UpdateScheduler::sendDailyMessage(int64_t chatId)
 
     if (isSolsticeDay)
     {
-        (void)bot_->getApi().sendMessage(chatId, "It's the " + solsticeType + " solstice.", 0);
+        (void)bot_->getApi().sendMessage(chatId, "It's the " + solsticeType + " solstice.", nullptr);
     }
     
     this->isDaylightIncreasing = isDaylightIncreasingLocal;
@@ -103,13 +103,14 @@ void UpdateScheduler::handleDaysTillSolstice(int64_t chatId)
         const auto today = std::chrono::system_clock::now();
 
         (void)bot_->getApi().sendMessage(chatId,
-                                         "Days till the solstice: " + std::to_string(
-                                             WeatherDataParser::calculateDaysTillNearestSolstice(today)), 0);
+                                         "Days till the summer solstice: " + std::to_string(
+                                             calculateDaysTillNearestSolstice(today)), nullptr);
     }
     else
     {
-        (void)bot_->getApi().sendMessage(chatId, "Daylight hours are increasing, wait for the summer solstice.",
-                                         0);
+        (void)bot_->getApi().sendMessage(chatId,
+                                         "Days till the winter solstice: " + std::to_string(
+                                             calculateDaysTillNearestSolstice(today)), nullptr);
     }
 }
 
