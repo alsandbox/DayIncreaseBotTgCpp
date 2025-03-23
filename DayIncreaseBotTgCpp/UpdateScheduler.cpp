@@ -104,16 +104,16 @@ int UpdateScheduler::calculateDaysTillNearestSolstice(const std::chrono::system_
         return -1;
     }
 
-    auto [fst, snd] = *solsticeOpt;
+    auto [winter, summer] = *solsticeOpt;
     std::chrono::system_clock::time_point targetDate;
 
     if (isDaylightIncreasing)
     {
-        targetDate = snd;
+        targetDate = summer;
     }
     else
     {
-        targetDate = fst;
+        targetDate = winter;
     }
 
     using days = std::chrono::duration<int, std::ratio<86400>>;
