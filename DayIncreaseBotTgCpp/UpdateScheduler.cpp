@@ -94,14 +94,41 @@ SolsticeStatus UpdateScheduler::getSolsticeStatus(const std::chrono::system_cloc
     return {isSolsticeDay, solsticeType, isDaylightIncreasing};
 }
 
+int UpdateScheduler::calculateDaysTillNearestSolstice(const std::chrono::system_clock::time_point today) const {
+    const int year = SolsticeData::getYearFromDate(today);
+    auto solsticeOpt= SolsticeData::getSolsticeByYear(year);
+
+    if (!solsticeOpt)
+    {
+        std::cerr << "Solstice data for the specified year is unavailable.\n";
+        return -1;
+    }
+
+    auto [fst, snd] = *solsticeOpt;
+    std::chrono::system_clock::time_point targetDate;
+
+    if (isDaylightIncreasing)
+    {
+        targetDate = snd;
+    }
+    else
+    {
+        targetDate = fst;
+    }
+
+    using days = std::chrono::duration<int, std::ratio<86400>>;
+    const auto duration = std::chrono::duration_cast<days>(targetDate - today);
+    return duration.count();
+}
+
 void UpdateScheduler::handleDaysTillSolstice(int64_t chatId)
 {
     std::thread(&UpdateScheduler::sendDailyMessage, this, chatId).detach();
+    const auto today = std::chrono::system_clock::now();
+    sendDailyMessage(chatId);
 
-    if (!isDaylightIncreasing)
+    if (isDaylightIncreasing)
     {
-        const auto today = std::chrono::system_clock::now();
-
         (void)bot_->getApi().sendMessage(chatId,
                                          "Days till the summer solstice: " + std::to_string(
                                              calculateDaysTillNearestSolstice(today)), nullptr);
