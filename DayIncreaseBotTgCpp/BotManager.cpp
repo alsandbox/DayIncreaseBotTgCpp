@@ -22,10 +22,11 @@ void BotManager::startBot() {
     isRunning = true;
     bot_->getEvents().onAnyMessage([this, stateInfo_](const TgBot::Message::Ptr& message) {
         const int64_t chatId = message->chat->id;
+        const auto stateDict = messageHandler_->getStateInfo(chatId);
 
         auto stateDict = messageHandler_->GetStateInfo(chatId);
         if (stateDict == nullptr) {
-            messageHandler_->SetStateInfo(chatId, stateInfo_);
+            messageHandler_->setStateInfo(chatId, stateInfo_);
         }
 
         messageHandler_->handleUpdate(chatId, message);

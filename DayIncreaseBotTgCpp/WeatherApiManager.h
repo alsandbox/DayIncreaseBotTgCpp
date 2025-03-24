@@ -13,7 +13,7 @@ public:
 
     [[nodiscard]] double getLatitude() const { return latitude; }
     [[nodiscard]] double getLongitude() const { return longitude; }
-
+    [[nodiscard]] std::string getTime(std::chrono::system_clock::time_point date) const;
     double setLatitude(const double latitude_)
     {
         latitude = latitude_;
@@ -25,8 +25,6 @@ public:
         longitude = longitude_;
         return longitude;
     }
-
-    [[nodiscard]] std::string getTime(std::chrono::system_clock::time_point date) const;
 
 private:
     std::shared_ptr<WeatherApiClient> weatherApiClient_;

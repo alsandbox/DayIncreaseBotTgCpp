@@ -231,7 +231,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
 
 void MessageHandler::handleLocation(const TgBot::Message::Ptr& message, int64_t chatId)
 {
-    auto it = stateInfoDictionary.find(chatId);
+    const auto it = stateInfoDictionary.find(chatId);
 
     if (message && message->location)
     {

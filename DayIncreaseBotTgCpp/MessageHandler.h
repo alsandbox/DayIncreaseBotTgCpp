@@ -28,12 +28,17 @@ public:
     static void handlePollingError(const std::exception& exception);
     void askLocationDependingChatType(const TgBot::Message::Ptr& message, int64_t chatId);
 
-    StateInfo* GetStateInfo(int64_t chatId) {
-        auto it = stateInfoDictionary.find(chatId);
-        return (it != stateInfoDictionary.end()) ? &it->second : nullptr;
+    StateInfo* getStateInfo(const int64_t chatId) {
+        const auto it = stateInfoDictionary.find(chatId);
+
+        if ((it != stateInfoDictionary.end())) {
+             return &it->second;
+        }
+
+        return nullptr;
     }
 
-    void SetStateInfo(int64_t chatId, const StateInfo& stateInfo) {
+    void setStateInfo(const int64_t chatId, const StateInfo& stateInfo) {
         stateInfoDictionary[chatId] = stateInfo;
     }
 
