@@ -1,6 +1,7 @@
 ﻿#include "BotManager.h"
 #include <tgbot/tgbot.h>
 #include <iostream>
+#include <future>
 
 BotManager::BotManager(const std::shared_ptr<TgBot::Bot>& bot,
                        const std::shared_ptr<WeatherApiManager>& weatherApiManager,
@@ -29,16 +30,17 @@ void BotManager::startBot() {
 
         messageHandler_->handleUpdate(chatId, message);
     });
-    try{
-        TgBot::TgLongPoll longPoll(*bot_);
-
-        //it runs in docker, no need to stop explicitly inside the container
-        while (isRunning) {
-            longPoll.start();
+    //it runs in docker, no need to stop explicitly inside the container
+    (void)std::async(std::launch::async, [this]() {
+        try {
+            TgBot::TgLongPoll longPoll(*bot_);
+            while (isRunning) {
+                longPoll.start();
+            }
+        } catch (const std::exception& e) {
+            handlePollingError(e);
         }
-    } catch (const std::exception& e) {
-        handlePollingError(e);
-    }
+    });
 }
 
 void BotManager::handlePollingError(const std::exception& exception)
