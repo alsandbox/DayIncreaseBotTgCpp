@@ -12,8 +12,8 @@ class BotManager
 {
 public:
     BotManager(const std::shared_ptr<TgBot::Bot>& bot, const std::shared_ptr<WeatherApiManager>& weatherApiManager,
-               const std::shared_ptr<WeatherDataParser>& weatherDataParser);
-    void startBot();
+               const std::shared_ptr<WeatherDataParser>& weatherDataParser, std::atomic<bool>& isRunning);
+    void startBot() const;
     static void handlePollingError(const std::exception& exception);
 
 private:
@@ -23,7 +23,7 @@ private:
     std::shared_ptr<LocationService> locationService_;
     std::shared_ptr<UpdateScheduler> updateScheduler_;
     std::shared_ptr<MessageHandler> messageHandler_;
-    bool isRunning = false;
+    std::atomic<bool>& isRunning_;
 };
 
 #endif
