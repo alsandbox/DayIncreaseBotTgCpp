@@ -103,11 +103,11 @@ void MessageHandler::handleUpdate(int64_t chatId, const TgBot::Message::Ptr &mes
                 }
                 selectCommand(command, chatId, message);
             }
-            if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false) {
+            if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false && isLocationRequired) {
                 (void)bot_->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
                 isSentOnce = true;
             }
-            else if (message->chat->type != TgBot::Chat::Type::Private || (message->location && message->chat->type == TgBot::Chat::Type::Private)) {
+            else if (message->chat->type != TgBot::Chat::Type::Private || (message->location && message->chat->type == TgBot::Chat::Type::Private) && isLocationRequired) {
                 handleLocation(message, chatId);
             }
         }
@@ -155,6 +155,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
     }
     else if (command == "/gettodaysinfo")
     {
+        isLocationRequired = true;
         if (it->second.hasLocation)
         {
             handleDaylightInfo(chatId);
@@ -176,6 +177,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
     }
     else if (command == "/changelocation")
     {
+        isLocationRequired = true;
         locationService_->onLocationReceived = [this, it]
         {
                 if (it->second.lastCommand == "/changelocation")
@@ -183,13 +185,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
                      it->second.lastCommand.clear();
                 }
         };
-        if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false) {
-            (void)bot_->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
-            isSentOnce = true;
-        }
-        else if (message->chat->type == TgBot::Chat::Type::Private) {
-            locationService_->requestLocation(chatId);
-        }
+        askLocationDependingChatType(message, chatId);
     }
     else if (command == "/getdaystillsolstice")
     {
@@ -197,6 +193,8 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
     }
     else if (command == "/setinterval")
     {
+        isLocationRequired = true;
+
         if (it->second.hasLocation)
         {
             scheduleDaylightUpdateWithLambda(chatId);

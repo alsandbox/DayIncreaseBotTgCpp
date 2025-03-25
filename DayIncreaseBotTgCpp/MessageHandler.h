@@ -48,6 +48,7 @@ private:
     std::shared_ptr<UpdateScheduler> updateScheduler_;
     std::shared_ptr<TgBot::Bot> bot_;
     bool isSentOnce = false;
+    bool isLocationRequired = false;
     std::unordered_map<int64_t, StateInfo> stateInfoDictionary;
 };
 
