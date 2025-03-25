@@ -207,7 +207,7 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
         {
             locationService_->onLocationReceived = [this, chatId, it]
             {
-                    if (it->second.lastCommand == "/setintervals")
+                    if (it->second.lastCommand == "/setinterval")
                     {
                         it->second.lastCommand.clear();
                         scheduleDaylightUpdateWithLambda(chatId);
@@ -220,10 +220,10 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
             askLocationDependingChatType(message, chatId);
         }
     }
-    else if (command == "/cancelintervals")
+    else if (command == "/cancelinterval")
     {
         updateScheduler_->cancelUvUpdates();
-        (void)bot_->getApi().sendMessage(chatId, "Intervals cancelled.", nullptr);
+        (void)bot_->getApi().sendMessage(chatId, "The interval is cancelled.", nullptr);
     }
 }
 
