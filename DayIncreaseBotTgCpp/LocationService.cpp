@@ -10,9 +10,9 @@ LocationService::LocationService(const std::shared_ptr<TgBot::Bot>& bot,
 void LocationService::requestLocation(int64_t chatId) const {
     try
     {
-        auto keyboard = std::make_shared<TgBot::ReplyKeyboardMarkup>();
+        const auto keyboard = std::make_shared<TgBot::ReplyKeyboardMarkup>();
 
-        auto locationButton = std::make_shared<TgBot::KeyboardButton>();
+        const auto locationButton = std::make_shared<TgBot::KeyboardButton>();
         locationButton->text = "Send Location";
         locationButton->requestLocation = true;
 
@@ -35,7 +35,7 @@ void LocationService::requestLocation(int64_t chatId) const {
 
 void LocationService::handleLocationReceived(int64_t chatId, const TgBot::Message::Ptr& message)
 {
-    std::shared_ptr<TgBot::Location> location = message->location;
+    const std::shared_ptr<TgBot::Location> location = message->location;
 
     if (location == nullptr || (location->latitude <= 0 && location->longitude <= 0))
     {
