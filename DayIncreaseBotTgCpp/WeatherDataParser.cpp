@@ -18,6 +18,24 @@ namespace
     }
 }
 
+std::string WeatherDataParser::parseTzId(const std::string& apiResponse) {
+
+    try {
+        nlohmann::json response = nlohmann::json::parse(apiResponse);
+        if (!response.contains("zoneName"))
+        {
+            return "Error parsing time zone data";
+        }
+
+        std::string zoneName = response["zoneName"];
+        return zoneName;
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "Error parsing time zone data: " << ex.what() << '\n';
+        return "Error parsing time zone data";
+    }
+}
 
 std::string WeatherDataParser::parseSunriseTime(const std::string& apiResponse)
 {
@@ -39,23 +57,8 @@ std::string WeatherDataParser::parseSunriseTime(const std::string& apiResponse)
         {
             return "Error parsing sunrise time";
         }
-
-        std::time_t utcTime = my_timegm(&tm);
-        if (utcTime == -1)
-        {
-            return "Error converting time";
-        }
-        utcTime += 3600;
-
-        std::tm localTm = {};
-
-        if (std::gmtime(&utcTime) == nullptr) {
-            return "Error converting to local time";
-        }
-        localTm = *std::gmtime(&utcTime); 
-
         std::ostringstream output;
-        output << std::put_time(&localTm, "%H:%M:%S");
+        output << std::put_time(&tm, "%H:%M:%S");
 
         return output.str();
     }
@@ -87,22 +90,8 @@ std::string WeatherDataParser::parseSunsetTime(const std::string& apiResponse)
             return "Error parsing sunset time";
         }
 
-        std::time_t utcTime = my_timegm(&tm);
-        if (utcTime == -1)
-        {
-            return "Error converting time";
-        }
-        utcTime += 3600;
-
-        std::tm localTm = {};
-        
-        if (std::gmtime(&utcTime) == nullptr) {
-            return "Error converting to local time";
-        }
-        localTm = *std::gmtime(&utcTime); 
-
         std::ostringstream output;
-        output << std::put_time(&localTm, "%H:%M:%S");
+        output << std::put_time(&tm, "%H:%M:%S");
 
         return output.str();
     }

@@ -11,7 +11,8 @@ void handleSignal(const int signal) {
     isRunning = false;
 }
 
-static std::string loadApiUrl()
+enum ApiType { timeApi, tzApi};
+static std::string loadApiUrl(ApiType apiType)
 {
     std::filesystem::path settingsFilePath = std::filesystem::current_path() / "settings.json";
     std::cerr << "Looking for settings.json at: " << settingsFilePath << '\n';
@@ -21,9 +22,13 @@ static std::string loadApiUrl()
         nlohmann::json j;
         file >> j;
 
-        if (j.contains("ApiSettings") && j["ApiSettings"].contains("ApiUrl"))
+        if (j.contains("ApiSettings") && j["ApiSettings"].contains("ApiUrl") && apiType == ApiType::timeApi)
         {
             return j["ApiSettings"]["ApiUrl"].get<std::string>();
+        }
+        if (j.contains("ApiSettings") && j["ApiSettings"].contains("tzApiUrl") && apiType == ApiType::tzApi)
+        {
+            return j["ApiSettings"]["tzApiUrl"].get<std::string>();
         }
     }
     
@@ -37,18 +42,32 @@ int main()
     std::signal(SIGINT, handleSignal);
 
     std::string botToken;
-    if (std::getenv("BOT_TOKEN"))
+    if (std::getenv("BOT_TOKEN")) {
         botToken = std::getenv("BOT_TOKEN");
-    else
+    }
+    else {
         botToken = "";
+    }
     if (botToken.empty()) {
         throw std::runtime_error("BOT_TOKEN not set");
     }
     auto bot = std::make_shared<TgBot::Bot>(botToken);
 
-    std::string apiUrl = loadApiUrl();
+    std::string apiKey;
+    if (std::getenv("API_KEY")) {
+        apiKey = std::getenv("API_KEY");
+    }
+    else {
+        apiKey = "";
+    }
+    if (apiKey.empty()) {
+        throw std::runtime_error("API_KEY is not set");
+    }
 
-    auto weatherApiClient = std::make_shared<WeatherApiClient>(apiUrl);
+    std::string apiUrl = loadApiUrl(timeApi);
+    std::string tzApiUrl = loadApiUrl(tzApi);
+
+    auto weatherApiClient = std::make_shared<WeatherApiClient>(apiUrl, tzApiUrl, apiKey);
     auto solsticeData = std::make_shared<SolsticeData>();
     auto weatherApiManager = std::make_shared<WeatherApiManager>(weatherApiClient);
     auto weatherDataParser = std::make_shared<WeatherDataParser>();

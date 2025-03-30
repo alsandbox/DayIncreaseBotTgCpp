@@ -46,6 +46,7 @@ struct WeatherData
 class WeatherDataParser {
 public:
     WeatherDataParser() = default;
+    static std::string parseTzId(const std::string& apiResponse);
     static std::string parseSunriseTime(const std::string& apiResponse);
     static std::string parseSunsetTime(const std::string& apiResponse);
     static std::string parseDayLength(const std::string& apiResponseToday, const std::string& apiResponseYesterday,
