@@ -1,5 +1,6 @@
 ﻿{
   "ApiSettings": {
-    "ApiUrl": "https://api.sunrise-sunset.org/json"
+    "ApiUrl": "https://api.sunrise-sunset.org/json",
+    "tzApiUrl": "http://api.timezonedb.com/v2.1/get-time-zone"
   }
 }
