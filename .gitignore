@@ -38,6 +38,7 @@ packages/
 *.vcxproj.user
 *.vcxproj.filters
 *.sln.DotSettings
+.vscode/
 
 # Compiled Object files
 *.slo
@@ -78,7 +79,9 @@ cmake-build-relwithdebinfo/
 cmake-build-minsizerel/
 cmake-build-debug-event-trace/
 cmake_install.cmake
+CMakeLists.txt.user
 
 # Ninja
 build/.ninja_*
 cmake-build-debug-event-trace/.ninja_*
+build.ninja
