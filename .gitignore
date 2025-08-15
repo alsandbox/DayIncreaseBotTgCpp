@@ -1,6 +1,8 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+perf.data
+test.1.er/
 
 # Rider ignored files
 /modules.xml
@@ -21,6 +23,9 @@ dataSources.local.xml
 # Build directories
 /x64/
 x64/
+build/
+Debug/
+Release/
 
 # Package-related files
 packages/
@@ -29,6 +34,7 @@ packages/
 *.d
 
 # Visual Studio-specific files
+.vs/
 *.vcxproj.user
 *.vcxproj.filters
 *.sln.DotSettings
@@ -70,3 +76,9 @@ cmake-build-debug/
 cmake-build-release/
 cmake-build-relwithdebinfo/
 cmake-build-minsizerel/
+cmake-build-debug-event-trace/
+cmake_install.cmake
+
+# Ninja
+build/.ninja_*
+cmake-build-debug-event-trace/.ninja_*
