@@ -7,24 +7,23 @@
 /projectSettingsUpdater.xml
 /contentModel.xml
 /.idea.DayIncreaseBotTgCpp.iml
-/.idea/
+.idea/
 *.sln.iml
 *.sln.DotSettings.user
 
 # Editor-based HTTP Client requests
-/httpRequests/
+httpRequests/
 
 # Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+dataSources/
+dataSources.local.xml
 
 # Build directories
 /x64/
 x64/
-/CMakeFiles/
 
 # Package-related files
-/packages/
+packages/
 
 # Prerequisites
 *.d
@@ -66,3 +65,8 @@ x64/
 
 # CMake-generated files
 CMakeCache.txt
+CMakeFiles/
+cmake-build-debug/
+cmake-build-release/
+cmake-build-relwithdebinfo/
+cmake-build-minsizerel/
