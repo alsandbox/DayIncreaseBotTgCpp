@@ -29,9 +29,9 @@ public:
     void askLocationDependingChatType(const TgBot::Message::Ptr& message, int64_t chatId);
 
     StateInfo* getStateInfo(const int64_t chatId) {
-        const auto it = stateInfoDictionary.find(chatId);
+        const auto it = m_stateInfoDictionary.find(chatId);
 
-        if ((it != stateInfoDictionary.end())) {
+        if ((it != m_stateInfoDictionary.end())) {
              return &it->second;
         }
 
@@ -39,17 +39,17 @@ public:
     }
 
     void setStateInfo(const int64_t chatId, const StateInfo& stateInfo) {
-        stateInfoDictionary[chatId] = stateInfo;
+        m_stateInfoDictionary[chatId] = stateInfo;
     }
 
 private:
-    std::shared_ptr<WeatherApiManager> weatherApiManager_;
-    std::shared_ptr<LocationService> locationService_;
-    std::shared_ptr<UpdateScheduler> updateScheduler_;
-    std::shared_ptr<TgBot::Bot> bot_;
-    bool isSentOnce = false;
-    bool isLocationRequired = false;
-    std::unordered_map<int64_t, StateInfo> stateInfoDictionary;
+    std::shared_ptr<WeatherApiManager> m_weatherApiManager;
+    std::shared_ptr<LocationService> m_locationService;
+    std::shared_ptr<UpdateScheduler> m_updateScheduler;
+    std::shared_ptr<TgBot::Bot> m_bot;
+    bool m_isSentOnce = false;
+    bool m_isLocationRequired = false;
+    std::unordered_map<int64_t, StateInfo> m_stateInfoDictionary;
 };
 
 #endif

@@ -25,15 +25,15 @@ public:
     void handleDaysTillSolstice(int64_t chatId);
     void cancelUvUpdates();
     int calculateDaysTillNearestSolstice(std::chrono::system_clock::time_point today) const;
-    bool getIsDaylightIncreasing() const { return isDaylightIncreasing; }
+    bool getIsDaylightIncreasing() const { return m_isDaylightIncreasing; }
 
 private:
-    const std::shared_ptr<TgBot::Bot> bot_;
-    std::shared_ptr<WeatherApiManager> weatherApiManager_;
-    std::shared_ptr<WeatherDataParser> weatherDataParser_;
-    std::thread timerThread;
-    std::atomic<bool> stopTimer = false;
-    bool isDaylightIncreasing = false;
+    const std::shared_ptr<TgBot::Bot> m_bot;
+    std::shared_ptr<WeatherApiManager> m_weatherApiManager;
+    std::shared_ptr<WeatherDataParser> m_weatherDataParser;
+    std::thread m_timerThread;
+    std::atomic<bool> m_stopTimer = false;
+    bool m_isDaylightIncreasing = false;
 };
 
 #endif

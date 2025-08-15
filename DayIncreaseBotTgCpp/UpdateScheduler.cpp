@@ -7,18 +7,18 @@
 UpdateScheduler::UpdateScheduler(const std::shared_ptr<TgBot::Bot>& bot,
                                  const std::shared_ptr<WeatherApiManager>& weatherApiManager,
                                  const std::shared_ptr<WeatherDataParser>& weatherDataParser)
-    : bot_(bot),
-      weatherApiManager_(weatherApiManager),
-      weatherDataParser_(weatherDataParser)
+    : m_bot(bot),
+      m_weatherApiManager(weatherApiManager),
+      m_weatherDataParser(weatherDataParser)
 {
 }
 
 void UpdateScheduler::scheduleUvUpdates(const std::function<void()>& handleDaylightInfo)
 {
-    stopTimer = false;
-    timerThread = std::thread([self = shared_from_this(), handleDaylightInfo]
+    m_stopTimer = false;
+    m_timerThread = std::thread([self = shared_from_this(), handleDaylightInfo]
     {
-        while (!self->stopTimer)
+        while (!self->m_stopTimer)
         {
             try
             {
@@ -55,10 +55,10 @@ void UpdateScheduler::sendDailyMessage(int64_t chatId)
 
     if (isSolsticeDay)
     {
-        (void)bot_->getApi().sendMessage(chatId, "It's the " + solsticeType + " solstice.", nullptr);
+        (void)m_bot->getApi().sendMessage(chatId, "It's the " + solsticeType + " solstice.", nullptr);
     }
     
-    this->isDaylightIncreasing = isDaylightIncreasingLocal;
+    this->m_isDaylightIncreasing = isDaylightIncreasingLocal;
 }
 
 SolsticeStatus UpdateScheduler::getSolsticeStatus(const std::chrono::system_clock::time_point& currentDate)
@@ -107,7 +107,7 @@ int UpdateScheduler::calculateDaysTillNearestSolstice(const std::chrono::system_
     auto [winter, summer] = *solsticeOpt;
     std::chrono::system_clock::time_point targetDate;
 
-    if (isDaylightIncreasing)
+    if (m_isDaylightIncreasing)
     {
         targetDate = summer;
     }
@@ -127,15 +127,15 @@ void UpdateScheduler::handleDaysTillSolstice(int64_t chatId)
     const auto today = std::chrono::system_clock::now();
     sendDailyMessage(chatId);
 
-    if (isDaylightIncreasing)
+    if (m_isDaylightIncreasing)
     {
-        (void)bot_->getApi().sendMessage(chatId,
+        (void)m_bot->getApi().sendMessage(chatId,
                                          "Days till the summer solstice: " + std::to_string(
                                              calculateDaysTillNearestSolstice(today)), nullptr);
     }
     else
     {
-        (void)bot_->getApi().sendMessage(chatId,
+        (void)m_bot->getApi().sendMessage(chatId,
                                          "Days till the winter solstice: " + std::to_string(
                                              calculateDaysTillNearestSolstice(today)), nullptr);
     }
@@ -143,9 +143,9 @@ void UpdateScheduler::handleDaysTillSolstice(int64_t chatId)
 
 void UpdateScheduler::cancelUvUpdates()
 {
-    stopTimer = true;
-    if (timerThread.joinable())
+    m_stopTimer = true;
+    if (m_timerThread.joinable())
     {
-        timerThread.join();
+        m_timerThread.join();
     }
 }

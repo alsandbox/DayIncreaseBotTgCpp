@@ -17,12 +17,12 @@ WeatherApiClient::WeatherApiClient(const std::string& apiUrl, const std::string&
         throw std::invalid_argument("API Key is not configured");
     }
 
-    apiUrl_ = apiUrl;
-    tzApiUrl_ = tzApiUrl;
-    apiKey_ = apiKey;
+    m_apiUrl = apiUrl;
+    m_tzApiUrl = tzApiUrl;
+    m_apiKey = apiKey;
 }
 std::string WeatherApiClient::getTzId(const double latitude, const double longitude) const {
-    const std::string tzUrl = tzApiUrl_ + "?key=" + apiKey_ + "&format=json&by=position&lat=" + std::to_string(latitude) + "&lng=" + std::to_string(longitude);
+    const std::string tzUrl = m_tzApiUrl + "?key=" + m_apiKey + "&format=json&by=position&lat=" + std::to_string(latitude) + "&lng=" + std::to_string(longitude);
     try
     {
         RestClient::Response response = RestClient::get(tzUrl);
@@ -41,7 +41,7 @@ std::string WeatherApiClient::getTzId(const double latitude, const double longit
 
 std::string WeatherApiClient::getWeatherData(const double latitude, const double longitude, const std::string& date, const std::string& tzId) const
 {
-    const std::string url = apiUrl_ + "?lat=" + std::to_string(latitude) +
+    const std::string url = m_apiUrl + "?lat=" + std::to_string(latitude) +
         "&lng=" + std::to_string(longitude) +
         "&date=" + date + "&formatted=0" + "&tzId=" + tzId;
     try

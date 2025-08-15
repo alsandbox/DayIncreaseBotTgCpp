@@ -8,10 +8,10 @@ MessageHandler::MessageHandler(const std::shared_ptr<WeatherApiManager>& weather
                                const std::shared_ptr<LocationService>& locationService,
                                const std::shared_ptr<TgBot::Bot>& bot,
                                const std::shared_ptr<UpdateScheduler>& updateScheduler)
-    : weatherApiManager_(weatherApiManager),
-      locationService_(locationService),
-      updateScheduler_(updateScheduler),
-      bot_(bot)
+    : m_weatherApiManager(weatherApiManager),
+      m_locationService(locationService),
+      m_updateScheduler(updateScheduler),
+      m_bot(bot)
 {
 }
 
@@ -33,7 +33,7 @@ void MessageHandler::handleGetTodayInfo(int64_t chatId) const
 
     const std::chrono::system_clock::time_point today = std::chrono::system_clock::from_time_t(std::mktime(&localTime));
 
-    if (std::string weather_data_json = weatherApiManager_->getTime(today); !weather_data_json.empty())
+    if (std::string weather_data_json = m_weatherApiManager->getTime(today); !weather_data_json.empty())
     {
         try
         {
@@ -43,45 +43,45 @@ void MessageHandler::handleGetTodayInfo(int64_t chatId) const
             const std::string message = "Sunrise time: " + sunriseTime +
                 "\nSunset time: " + sunsetTime +
                 "\nThe day length: " + dayLength;
-            (void)bot_->getApi().sendMessage(chatId, message);
+            (void)m_bot->getApi().sendMessage(chatId, message);
         }
         catch (const std::exception& e)
         {
             std::cerr << "Error parsing weather data: " << e.what() << '\n';
-            (void)bot_->getApi().sendMessage(chatId, "Unable to retrieve weather data.");
+            (void)m_bot->getApi().sendMessage(chatId, "Unable to retrieve weather data.");
         }
     }
     else
     {
         std::cout << "Error fetching weather data" << '\n';
-        (void)bot_->getApi().sendMessage(chatId, "Unable to fetch weather data.");
+        (void)m_bot->getApi().sendMessage(chatId, "Unable to fetch weather data.");
     }
 }
 
 void MessageHandler::handleDaylightInfo(int64_t chatId) const {
-    if (weatherApiManager_->getLatitude() <= 0 && weatherApiManager_->getLongitude() <= 0)
+    if (m_weatherApiManager->getLatitude() <= 0 && m_weatherApiManager->getLongitude() <= 0)
     {
-        if (const std::shared_ptr<TgBot::Chat> chat = bot_->getApi().getChat(chatId); chat->type == TgBot::Chat::Type::Private)
+        if (const std::shared_ptr<TgBot::Chat> chat = m_bot->getApi().getChat(chatId); chat->type == TgBot::Chat::Type::Private)
         {
-            locationService_->requestLocation(chatId);
+            m_locationService->requestLocation(chatId);
         }
         else
         {
-            (void)bot_->getApi().sendMessage(chatId, "Please send the location.",
+            (void)m_bot->getApi().sendMessage(chatId, "Please send the location.",
                                  nullptr);
         }
     }
 
-    if (locationService_->getIfLocationIsAvailable()) {
-        updateScheduler_->sendDailyMessage(chatId);
+    if (m_locationService->getIfLocationIsAvailable()) {
+        m_updateScheduler->sendDailyMessage(chatId);
 
-        if (updateScheduler_->getIsDaylightIncreasing())
+        if (m_updateScheduler->getIsDaylightIncreasing())
         {
             handleGetTodayInfo(chatId);
         }
         else
         {
-            (void)bot_->getApi().sendMessage(chatId, "Daylight hours are shortening, wait for the winter solstice.",
+            (void)m_bot->getApi().sendMessage(chatId, "Daylight hours are shortening, wait for the winter solstice.",
                                              nullptr);
         }
     }
@@ -103,11 +103,11 @@ void MessageHandler::handleUpdate(int64_t chatId, const TgBot::Message::Ptr &mes
                 }
                 selectCommand(command, chatId, message);
             }
-            if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false && isLocationRequired) {
-                (void)bot_->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
-                isSentOnce = true;
+            if (message->chat->type != TgBot::Chat::Type::Private && m_isSentOnce == false && m_isLocationRequired) {
+                (void)m_bot->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
+                m_isSentOnce = true;
             }
-            else if (message->chat->type != TgBot::Chat::Type::Private || (message->location && message->chat->type == TgBot::Chat::Type::Private) && isLocationRequired) {
+            else if (message->chat->type != TgBot::Chat::Type::Private || (message->location && message->chat->type == TgBot::Chat::Type::Private) && m_isLocationRequired) {
                 handleLocation(message, chatId);
             }
         }
@@ -131,39 +131,39 @@ void MessageHandler::scheduleDaylightUpdateWithLambda(int64_t chatId) const {
         handleDaylightInfo(chatId);
     };
 
-    updateScheduler_->scheduleUvUpdates(daylightUpdateLambda);
+    m_updateScheduler->scheduleUvUpdates(daylightUpdateLambda);
 }
 
 void MessageHandler::askLocationDependingChatType(const TgBot::Message::Ptr& message, int64_t chatId) {
-    if (message->chat->type != TgBot::Chat::Type::Private && isSentOnce == false) {
-        (void)bot_->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
-        isSentOnce = true;
+    if (message->chat->type != TgBot::Chat::Type::Private && m_isSentOnce == false) {
+        (void)m_bot->getApi().sendMessage(chatId, "Please, send me your location replying on this message.", nullptr);
+        m_isSentOnce = true;
     }
     else if (message->chat->type == TgBot::Chat::Type::Private) {
-        locationService_->requestLocation(chatId);
+        m_locationService->requestLocation(chatId);
     }
 }
 
 void MessageHandler::selectCommand(const std::string& command, int64_t chatId, const TgBot::Message::Ptr& message)
 {
-    auto it = stateInfoDictionary.find(chatId);
+    auto it = m_stateInfoDictionary.find(chatId);
     it->second.lastCommand = command;
 
     if (command == "/start")
     {
-        (void)bot_->getApi().sendMessage(chatId, "Bot started! Use available commands to interact.", nullptr);
+        (void)m_bot->getApi().sendMessage(chatId, "Bot started! Use available commands to interact.", nullptr);
     }
     else if (command == "/gettodaysinfo")
     {
-        isLocationRequired = true;
+        m_isLocationRequired = true;
         if (it->second.hasLocation)
         {
             handleDaylightInfo(chatId);
-            it->second.hasLocation = locationService_->getIfLocationIsAvailable();
+            it->second.hasLocation = m_locationService->getIfLocationIsAvailable();
         }
         else
         {
-            locationService_->onLocationReceived = [this, chatId, it]
+            m_locationService->onLocationReceived = [this, chatId, it]
             {
                 if (it->second.lastCommand == "/gettodaysinfo")
                     {
@@ -177,8 +177,8 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
     }
     else if (command == "/changelocation")
     {
-        isLocationRequired = true;
-        locationService_->onLocationReceived = [this, it]
+        m_isLocationRequired = true;
+        m_locationService->onLocationReceived = [this, it]
         {
                 if (it->second.lastCommand == "/changelocation")
                 {
@@ -189,29 +189,29 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
     }
     else if (command == "/getdaystillsolstice")
     {
-        updateScheduler_->handleDaysTillSolstice(chatId);
+        m_updateScheduler->handleDaysTillSolstice(chatId);
     }
     else if (command == "/setinterval")
     {
-        isLocationRequired = true;
+        m_isLocationRequired = true;
 
         if (it->second.hasLocation)
         {
             scheduleDaylightUpdateWithLambda(chatId);
-            (void)bot_->getApi().sendMessage(
+            (void)m_bot->getApi().sendMessage(
                 chatId,
                 "The next message will be sent after 24 hours. You will receive messages every day until the summer solstice.", nullptr);
-                it->second.hasLocation = locationService_->getIfLocationIsAvailable();
+                it->second.hasLocation = m_locationService->getIfLocationIsAvailable();
         }
         else
         {
-            locationService_->onLocationReceived = [this, chatId, it]
+            m_locationService->onLocationReceived = [this, chatId, it]
             {
                     if (it->second.lastCommand == "/setinterval")
                     {
                         it->second.lastCommand.clear();
                         scheduleDaylightUpdateWithLambda(chatId);
-                        (void)bot_->getApi().sendMessage(
+                        (void)m_bot->getApi().sendMessage(
                             chatId,
                             "The next message will be sent after 24 hours. You will receive messages every day until the summer solstice.", nullptr);
                     }
@@ -222,29 +222,29 @@ void MessageHandler::selectCommand(const std::string& command, int64_t chatId, c
     }
     else if (command == "/cancelinterval")
     {
-        updateScheduler_->cancelUvUpdates();
-        (void)bot_->getApi().sendMessage(chatId, "The interval is cancelled.", nullptr);
+        m_updateScheduler->cancelUvUpdates();
+        (void)m_bot->getApi().sendMessage(chatId, "The interval is cancelled.", nullptr);
     }
 }
 
 void MessageHandler::handleLocation(const TgBot::Message::Ptr& message, int64_t chatId)
 {
-    const auto it = stateInfoDictionary.find(chatId);
+    const auto it = m_stateInfoDictionary.find(chatId);
 
     if (message && message->location)
     {
         auto future = std::async(std::launch::async,
                                  &LocationService::handleLocationReceived,
-                                 locationService_.get(),
+                                 m_locationService.get(),
                                  chatId,
                                  message);
 
         future.get();
-        it->second.hasLocation = locationService_->getIfLocationIsAvailable();
-        if (locationService_->onLocationReceived)
+        it->second.hasLocation = m_locationService->getIfLocationIsAvailable();
+        if (m_locationService->onLocationReceived)
         {
-            locationService_->onLocationReceived();
-            locationService_->onLocationReceived = nullptr;
+            m_locationService->onLocationReceived();
+            m_locationService->onLocationReceived = nullptr;
         }
     }
 }

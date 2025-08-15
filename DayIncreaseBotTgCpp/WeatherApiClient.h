@@ -10,8 +10,8 @@ public:
     [[nodiscard]] std::string getWeatherData(double latitude, double longitude, const std::string& date, const std::string& tzId) const;
 
 private:
-    std::string apiUrl_;
-    std::string tzApiUrl_;
-    std::string apiKey_;
+    std::string m_apiUrl;
+    std::string m_tzApiUrl;
+    std::string m_apiKey;
 };
 #endif

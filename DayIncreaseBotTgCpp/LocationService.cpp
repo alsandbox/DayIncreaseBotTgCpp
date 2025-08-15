@@ -2,8 +2,8 @@
 
 LocationService::LocationService(const std::shared_ptr<TgBot::Bot>& bot,
                                  const std::shared_ptr<WeatherApiManager>& weatherApiManager)
-    : bot_(bot),
-      weatherApiManager_(weatherApiManager)
+    : m_bot(bot),
+      m_weatherApiManager(weatherApiManager)
 {
 }
 
@@ -24,7 +24,7 @@ void LocationService::requestLocation(int64_t chatId) const {
         keyboard->resizeKeyboard = true;
         keyboard->oneTimeKeyboard = true;
 
-        (void)bot_->getApi().sendMessage(chatId, "To receive the info, please share your location:", nullptr, nullptr,
+        (void)m_bot->getApi().sendMessage(chatId, "To receive the info, please share your location:", nullptr, nullptr,
                                          keyboard);
     }
     catch (const std::exception& e)
@@ -41,7 +41,7 @@ void LocationService::handleLocationReceived(int64_t chatId, const TgBot::Messag
     {
         try
         {
-            (void)bot_->getApi().sendMessage(chatId, "Invalid location received. Please try again.",nullptr);
+            (void)m_bot->getApi().sendMessage(chatId, "Invalid location received. Please try again.",nullptr);
         }
         catch (const std::exception& e)
         {
@@ -53,10 +53,10 @@ void LocationService::handleLocationReceived(int64_t chatId, const TgBot::Messag
         }
     }
 
-    isLocationReceived = true;
+    m_isLocationReceived = true;
 
-    weatherApiManager_->setLatitude(location->latitude);
-    weatherApiManager_->setLongitude(location->longitude);
+    m_weatherApiManager->setLatitude(location->latitude);
+    m_weatherApiManager->setLongitude(location->longitude);
     
     try
     {
@@ -64,7 +64,7 @@ void LocationService::handleLocationReceived(int64_t chatId, const TgBot::Messag
         removeKeyboard->removeKeyboard = true;
         removeKeyboard->selective = false;
 
-            (void)bot_->getApi().sendMessage(chatId,
+            (void)m_bot->getApi().sendMessage(chatId,
                                              "Location received. You can now start receiving information.",
                                              nullptr,
                                              nullptr,
