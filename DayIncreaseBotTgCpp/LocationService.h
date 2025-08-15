@@ -13,7 +13,7 @@ public:
     void requestLocation(int64_t chatId) const;
     void handleLocationReceived(int64_t chatId, const TgBot::Message::Ptr& message);
     std::function<void()> onLocationReceived;
-    bool getIfLocationIsAvailable() const { return isLocationReceived; }
+    [[nodiscard]] bool getIfLocationIsAvailable() const { return isLocationReceived; }
 private:
     std::shared_ptr<TgBot::Bot> bot_;
     std::shared_ptr<WeatherApiManager> weatherApiManager_;
