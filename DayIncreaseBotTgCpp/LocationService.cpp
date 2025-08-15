@@ -61,6 +61,9 @@ void LocationService::handleLocationReceived(int64_t chatId, const TgBot::Messag
     try
     {
         const TgBot::ReplyKeyboardRemove::Ptr removeKeyboard(new TgBot::ReplyKeyboardRemove);
+        removeKeyboard->removeKeyboard = true;
+        removeKeyboard->selective = false;
+
             (void)bot_->getApi().sendMessage(chatId,
                                              "Location received. You can now start receiving information.",
                                              nullptr,
