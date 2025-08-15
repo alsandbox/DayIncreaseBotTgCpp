@@ -24,7 +24,7 @@ public:
     static SolsticeStatus getSolsticeStatus(const std::chrono::system_clock::time_point& currentDate);
     void handleDaysTillSolstice(int64_t chatId);
     void cancelUvUpdates();
-    int calculateDaysTillNearestSolstice(const std::chrono::system_clock::time_point today) const;
+    int calculateDaysTillNearestSolstice(std::chrono::system_clock::time_point today) const;
     bool getIsDaylightIncreasing() const { return isDaylightIncreasing; }
 
 private:
