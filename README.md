@@ -6,35 +6,35 @@ It supports these commands:
   <details>
   <summary>Show screenshot</summary>
   
-  ![/gettodaysinfo]()
+  ![/gettodaysinfo](screenshots/gettodaysinfo.png)
   </details>
 
 - **/getdaystillsolstice** – Show days left until the solstice.  
   <details>
   <summary>Show screenshot</summary>
   
-  ![/getdaystillsolstice]()
+  ![/getdaystillsolstice](screenshots/getdaystillsolstice.png)
   </details>
 
 - **/changelocation** – Set or change location.  
   <details>
   <summary>Show screenshot</summary>
   
-  ![/changelocation]()
+  ![/changelocation](screenshots/changelocation.png)
   </details>
 
-- **/setintervals** – Set intervals for receiving info. The interval starts at the time when the command is executed, and the message is sent every 24 hours.  
+- **/setinterval** – Set an interval for receiving info. The interval starts at the time when the command is executed, and the message is sent every 24 hours.  
   <details>
   <summary>Show screenshot</summary>
   
-  ![/setintervals]()
+  ![/setinterval](screenshots/setinterval.png)
   </details>
 
-- **/cancelintervals** – Cancel receiving messages at intervals.  
+- **/cancelinterval** – Cancel receiving messages at the interval.  
   <details>
   <summary>Show screenshot</summary>
   
-  ![/cancelintervals]()
+  ![/cancelinterval](screenshots/cancelinterval.png)
   </details>
 
 ## Dependencies
