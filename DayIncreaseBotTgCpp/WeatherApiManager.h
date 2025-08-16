@@ -6,23 +6,23 @@
 
 #include "WeatherApiClient.h"
 
-class WeatherApiManager
-{
+class WeatherApiManager {
 public:
-    explicit WeatherApiManager(const std::shared_ptr<WeatherApiClient>& weatherApiClient);
+    explicit WeatherApiManager(const std::shared_ptr<WeatherApiClient> &weatherApiClient);
 
     [[nodiscard]] double getLatitude() const { return m_latitude; }
     [[nodiscard]] double getLongitude() const { return m_longitude; }
+
     [[nodiscard]] std::string getParsedTzId(double latitude, double longitude) const;
+
     [[nodiscard]] std::string getTime(std::chrono::system_clock::time_point date) const;
-    double setLatitude(const double latitude_)
-    {
+
+    double setLatitude(const double latitude_) {
         m_latitude = latitude_;
         return m_latitude;
     }
 
-    double setLongitude(const double longitude_)
-    {
+    double setLongitude(const double longitude_) {
         m_longitude = longitude_;
         return m_longitude;
     }

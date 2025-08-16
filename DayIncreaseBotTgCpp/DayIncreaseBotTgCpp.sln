@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DayIncreaseBotTgCpp", "DayIncreaseBotTgCpp.vcxproj", "{EBF0F56E-5085-3521-A133-9AB0822A7C0A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{73381F98-C568-3B28-86F8-90171F3C30E7} = {73381F98-C568-3B28-86F8-90171F3C30E7}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+		MinSizeRel|x64 = MinSizeRel|x64
+		RelWithDebInfo|x64 = RelWithDebInfo|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.Debug|x64.ActiveCfg = Debug|x64
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.Debug|x64.Build.0 = Debug|x64
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.Release|x64.ActiveCfg = Release|x64
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.Release|x64.Build.0 = Release|x64
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{EBF0F56E-5085-3521-A133-9AB0822A7C0A}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6EEB143-E40F-3B78-8E75-923088509AB7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -8,13 +8,14 @@
 #include "LocationService.h"
 #include "UpdateScheduler.h"
 
-class BotManager
-{
+class BotManager {
 public:
-    BotManager(const std::shared_ptr<TgBot::Bot>& bot, const std::shared_ptr<WeatherApiManager>& weatherApiManager,
-               const std::shared_ptr<WeatherDataParser>& weatherDataParser, std::atomic<bool>& isRunning);
+    BotManager(const std::shared_ptr<TgBot::Bot> &bot, const std::shared_ptr<WeatherApiManager> &weatherApiManager,
+               const std::shared_ptr<WeatherDataParser> &weatherDataParser, std::atomic<bool> &isRunning);
+
     void startBot() const;
-    static void handlePollingError(const std::exception& exception);
+
+    static void handlePollingError(const std::exception &exception);
 
 private:
     std::shared_ptr<TgBot::Bot> bot_;
@@ -23,7 +24,7 @@ private:
     std::shared_ptr<LocationService> locationService_;
     std::shared_ptr<UpdateScheduler> updateScheduler_;
     std::shared_ptr<MessageHandler> messageHandler_;
-    std::atomic<bool>& isRunning_;
+    std::atomic<bool> &isRunning_;
 };
 
 #endif
