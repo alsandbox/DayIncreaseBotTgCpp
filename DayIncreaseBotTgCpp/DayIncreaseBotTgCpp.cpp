@@ -1,5 +1,5 @@
-#include <tgbot/tgbot.h>
 #include <string>
+#include <tgbot/tgbot.h>
 #include "BotManager.h"
 #include "SolsticeData.h"
 #include "WeatherApiManager.h"
@@ -11,41 +11,36 @@ void handleSignal(const int signal) {
     isRunning = false;
 }
 
-enum ApiType { timeApi, tzApi};
-static std::string loadApiUrl(ApiType apiType)
-{
+enum ApiType { timeApi, tzApi };
+
+static std::string loadApiUrl(ApiType apiType) {
     std::filesystem::path settingsFilePath = std::filesystem::current_path() / "settings.json";
     std::cerr << "Looking for settings.json at: " << settingsFilePath << '\n';
 
-    if (std::ifstream file(settingsFilePath); file.is_open())
-    {
+    if (std::ifstream file(settingsFilePath); file.is_open()) {
         nlohmann::json j;
         file >> j;
 
-        if (j.contains("ApiSettings") && j["ApiSettings"].contains("ApiUrl") && apiType == ApiType::timeApi)
-        {
+        if (j.contains("ApiSettings") && j["ApiSettings"].contains("ApiUrl") && apiType == ApiType::timeApi) {
             return j["ApiSettings"]["ApiUrl"].get<std::string>();
         }
-        if (j.contains("ApiSettings") && j["ApiSettings"].contains("tzApiUrl") && apiType == ApiType::tzApi)
-        {
+        if (j.contains("ApiSettings") && j["ApiSettings"].contains("tzApiUrl") && apiType == ApiType::tzApi) {
             return j["ApiSettings"]["tzApiUrl"].get<std::string>();
         }
     }
-    
+
     std::cerr << "Failed to load API URL." << '\n';
     return "";
 }
 
-int main()
-{
+int main() {
     std::signal(SIGTERM, handleSignal);
     std::signal(SIGINT, handleSignal);
 
     std::string botToken;
     if (std::getenv("BOT_TOKEN")) {
         botToken = std::getenv("BOT_TOKEN");
-    }
-    else {
+    } else {
         botToken = "";
     }
     if (botToken.empty()) {
@@ -56,8 +51,7 @@ int main()
     std::string apiKey;
     if (std::getenv("API_KEY")) {
         apiKey = std::getenv("API_KEY");
-    }
-    else {
+    } else {
         apiKey = "";
     }
     if (apiKey.empty()) {
@@ -74,6 +68,6 @@ int main()
     const auto botManager = std::make_shared<BotManager>(bot, weatherApiManager, weatherDataParser, isRunning);
 
     botManager->startBot();
-    
+
     return 0;
 }

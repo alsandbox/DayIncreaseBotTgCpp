@@ -6,30 +6,30 @@
 
 #include "WeatherApiClient.h"
 
-class WeatherApiManager
-{
+class WeatherApiManager {
 public:
-    explicit WeatherApiManager(const std::shared_ptr<WeatherApiClient>& weatherApiClient);
+    explicit WeatherApiManager(const std::shared_ptr<WeatherApiClient> &weatherApiClient);
 
-    [[nodiscard]] double getLatitude() const { return latitude; }
-    [[nodiscard]] double getLongitude() const { return longitude; }
+    [[nodiscard]] double getLatitude() const { return m_latitude; }
+    [[nodiscard]] double getLongitude() const { return m_longitude; }
+
     [[nodiscard]] std::string getParsedTzId(double latitude, double longitude) const;
+
     [[nodiscard]] std::string getTime(std::chrono::system_clock::time_point date) const;
-    double setLatitude(const double latitude_)
-    {
-        latitude = latitude_;
-        return latitude;
+
+    double setLatitude(const double latitude_) {
+        m_latitude = latitude_;
+        return m_latitude;
     }
 
-    double setLongitude(const double longitude_)
-    {
-        longitude = longitude_;
-        return longitude;
+    double setLongitude(const double longitude_) {
+        m_longitude = longitude_;
+        return m_longitude;
     }
 
 private:
-    std::shared_ptr<WeatherApiClient> weatherApiClient_;
-    double latitude = 0;
-    double longitude = 0;
+    std::shared_ptr<WeatherApiClient> m_weatherApiClient;
+    double m_latitude = 0;
+    double m_longitude = 0;
 };
 #endif

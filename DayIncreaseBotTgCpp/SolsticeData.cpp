@@ -1,27 +1,24 @@
 ﻿#include "SolsticeData.h"
 
 #include <iomanip>
-#include <iostream>
 #include <ostream>
 #include <sstream>
 
-namespace
-{
-    std::chrono::system_clock::time_point createDate(int year, int month, int day, int hour, int minute)
-    {
-        std::tm timeInfo = {};
-        timeInfo.tm_year = year - 1900;
-        timeInfo.tm_mon = month - 1;
-        timeInfo.tm_mday = day;
-        timeInfo.tm_hour = hour;
-        timeInfo.tm_min = minute;
-        timeInfo.tm_sec = 0;
+std::chrono::system_clock::time_point SolsticeData::createDate(const int year, const int month, int day, const int hour,
+                                                               const int minute) {
+    std::tm timeInfo = {};
+    timeInfo.tm_year = year - 1900;
+    timeInfo.tm_mon = month - 1;
+    timeInfo.tm_mday = day;
+    timeInfo.tm_hour = hour;
+    timeInfo.tm_min = minute;
+    timeInfo.tm_sec = 0;
 
-        return std::chrono::system_clock::from_time_t(std::mktime(&timeInfo));
-    }
+    return std::chrono::system_clock::from_time_t(std::mktime(&timeInfo));
 }
 
-std::map<int, std::pair<std::chrono::system_clock::time_point, std::chrono::system_clock::time_point>> SolsticeData::solsticeData =
+std::map<int, std::pair<std::chrono::system_clock::time_point, std::chrono::system_clock::time_point> >
+SolsticeData::solsticeData =
 {
     {2024, {createDate(2024, 12, 21, 9, 20), createDate(2024, 6, 21, 20, 51)}},
     {2025, {createDate(2025, 12, 21, 15, 3), createDate(2025, 6, 21, 2, 42)}},
@@ -32,30 +29,26 @@ std::map<int, std::pair<std::chrono::system_clock::time_point, std::chrono::syst
     {2030, {createDate(2030, 12, 21, 20, 9), createDate(2030, 6, 21, 7, 31)}}
 };
 
-std::optional<std::pair<std::chrono::system_clock::time_point, std::chrono::system_clock::time_point>>
-SolsticeData::getSolsticeByYear(const int year)
-{
-    if (const auto it = solsticeData.find(year); it != solsticeData.end())
-    {
+std::optional<std::pair<std::chrono::system_clock::time_point, std::chrono::system_clock::time_point> >
+SolsticeData::getSolsticeByYear(const int year) {
+    if (const auto it = solsticeData.find(year); it != solsticeData.end()) {
         return it->second;
     }
 
     return std::nullopt;
 }
 
-int SolsticeData::getYearFromDate(const std::chrono::system_clock::time_point& date)
-{
+int SolsticeData::getYearFromDate(const std::chrono::system_clock::time_point &date) {
     std::time_t time = std::chrono::system_clock::to_time_t(date);
     std::tm tmInfo = {};
 
-    gmtime(&time); 
-    tmInfo = *gmtime(&time); 
+    gmtime(&time);
+    tmInfo = *gmtime(&time);
 
     return tmInfo.tm_year + 1900;
 }
 
-std::string SolsticeData::formatDate(const std::chrono::system_clock::time_point& date)
-{
+std::string SolsticeData::formatDate(const std::chrono::system_clock::time_point &date) {
     std::time_t time = std::chrono::system_clock::to_time_t(date);
     std::tm tmInfo = {};
 

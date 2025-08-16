@@ -1,38 +1,44 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+perf.data
+test.1.er/
 
 # Rider ignored files
 /modules.xml
 /projectSettingsUpdater.xml
 /contentModel.xml
 /.idea.DayIncreaseBotTgCpp.iml
-/.idea/
+.idea/
 *.sln.iml
 *.sln.DotSettings.user
 
 # Editor-based HTTP Client requests
-/httpRequests/
+httpRequests/
 
 # Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+dataSources/
+dataSources.local.xml
 
 # Build directories
 /x64/
 x64/
-/CMakeFiles/
+build/
+Debug/
+Release/
 
 # Package-related files
-/packages/
+packages/
 
 # Prerequisites
 *.d
 
 # Visual Studio-specific files
+.vs/
 *.vcxproj.user
 *.vcxproj.filters
 *.sln.DotSettings
+.vscode/
 
 # Compiled Object files
 *.slo
@@ -66,3 +72,16 @@ x64/
 
 # CMake-generated files
 CMakeCache.txt
+CMakeFiles/
+cmake-build-debug/
+cmake-build-release/
+cmake-build-relwithdebinfo/
+cmake-build-minsizerel/
+cmake-build-debug-event-trace/
+cmake_install.cmake
+CMakeLists.txt.user
+
+# Ninja
+build/.ninja_*
+cmake-build-debug-event-trace/.ninja_*
+build.ninja

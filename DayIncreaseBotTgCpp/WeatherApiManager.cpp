@@ -8,13 +8,13 @@
 #include "WeatherDataParser.h"
 
 WeatherApiManager::WeatherApiManager(const std::shared_ptr<WeatherApiClient>& weatherApiClient)
-    : weatherApiClient_(weatherApiClient)
+    : m_weatherApiClient(weatherApiClient)
 {
 }
 
 std::string WeatherApiManager::getParsedTzId(const double latitude, const double longitude) const
 {
-    const std::string resultTzId = weatherApiClient_->getTzId(latitude, longitude);
+    const std::string resultTzId = m_weatherApiClient->getTzId(latitude, longitude);
     std::string parsedTzId = WeatherDataParser::parseTzId(resultTzId);
     return parsedTzId;
 }
@@ -39,11 +39,11 @@ std::string WeatherApiManager::getTime(std::chrono::system_clock::time_point dat
         std::string formattedYesterday = SolsticeData::formatDate(yesterday);
         std::string formattedWinterSolstice = SolsticeData::formatDate(winterSolstice);
 
-        std::string tzId = getParsedTzId(latitude, longitude);
-        std::string resultToday = weatherApiClient_->getWeatherData(getLatitude(), getLongitude(), formattedDate, tzId);
-        std::string resultYesterday = weatherApiClient_->getWeatherData(getLatitude(), getLongitude(),
+        std::string tzId = getParsedTzId(m_latitude, m_longitude);
+        std::string resultToday = m_weatherApiClient->getWeatherData(getLatitude(), getLongitude(), formattedDate, tzId);
+        std::string resultYesterday = m_weatherApiClient->getWeatherData(getLatitude(), getLongitude(),
                                                                         formattedYesterday, tzId);
-        std::string resultShortestDay = weatherApiClient_->getWeatherData(
+        std::string resultShortestDay = m_weatherApiClient->getWeatherData(
             getLatitude(), getLongitude(), formattedWinterSolstice, tzId);
 
         std::string sunriseTime = WeatherDataParser::parseSunriseTime(resultToday);
