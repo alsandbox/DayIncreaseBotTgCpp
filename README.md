@@ -1,3 +1,5 @@
+> _Currently offline while being prepared for deployment on a Raspberry Pi._
+
 ## About
 A simple [Telegram bot](https://t.me/DayIncreaseBot) that tracks the growing daylight from the winter to the summer solstice. It can be used in group chats, where the location should be sent as a reply to the bot’s message: "To receive the info, please share your location:".
 
@@ -50,4 +52,4 @@ It supports these commands:
 
 The bot receives incoming updates via long polling.  
 
-Previously deployed in the cloud (Ubuntu). Currently offline while being prepared for deployment on a Raspberry Pi.  
+Previously deployed in the cloud (Ubuntu). 
